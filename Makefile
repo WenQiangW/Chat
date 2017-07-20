@@ -3,18 +3,21 @@ SERVER=$(ROOT)/server
 CLIENT=$(ROOT)/client
 LOG=$(ROOT)/log
 POOL=$(ROOT)/data_pool
-
+COMM=$(ROOT)/comm
+LIB=$(ROOT)/lib
 SERVER_BIN=chat_system
 CLIENT_BIN=chat_client
 
-INCLUDE=-I$(POOL) -I$(LOG)
-LDFLAGS=-lpthread
+
+INCLUDE=-I$(POOL) -I$(LOG) -I$(COMM) -I$(LIB)/include
+LDFLAGS=-lpthread -ljson
 
 SERVER_OBJ=$(shell ls $(SERVER) | grep -E '\.cpp$$' | sed 's/\.cpp/\.o/')
 SERVER_OBJ+=$(shell ls $(LOG) | grep -E '\.cpp$$' | sed 's/\.cpp/\.o/')
 SERVER_OBJ+=$(shell ls $(POOL) | grep -E '\.cpp$$' | sed 's/\.cpp/\.o/')
 CLIENT_OBJ=$(shell ls $(CLIENT) | grep -E '\.cpp$$' | sed 's/\.cpp/\.o/g')
 CLIENT_OBJ+=$(shell ls $(LOG) | grep -E '\.cpp$$' | sed 's/\.cpp/\.o/')
+CLIENT_OBJ+=$(shell ls $(COMM) | grep -E '\.cpp$$' | sed 's/\.cpp/\.o/')
 
 CC=g++
 
@@ -22,9 +25,9 @@ CC=g++
 all:$(SERVER_BIN) $(CLIENT_BIN)
 
 $(SERVER_BIN):$(SERVER_OBJ)
-	$(CC) -o $@ $^ $(LDFLAGS)
-$(CLIENT_BIN):$(CLIENT_OBJ)
-	$(CC) -o $@ $^
+	$(CC) -o $@ $^ $(LDFLAGS) -L$(LIB)/lib
+$(CLIENT_BIN):$(CLIENT_OBJ) 
+	$(CC) -o $@ $^ $(LDFLAGS) -L$(LIB)/lib
 
 %.o:$(CLIENT)/%.cpp
 	$(CC) -c $< $(INCLUDE)
@@ -34,11 +37,13 @@ $(CLIENT_BIN):$(CLIENT_OBJ)
 	$(CC) -c $<
 %.o:$(LOG)/%.cpp
 	$(CC) -c $<
-
+%.o:$(COMM)/%.cpp
+	$(CC) -c $< $(INCLUDE)
 
 .PHONY:debug
 debug:
 	echo $(SERVER_OBJ)
+	echo $(CLIENT_OBJ)
 
 .PHONY:clean
 clean:
