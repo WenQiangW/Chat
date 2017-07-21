@@ -5,12 +5,14 @@ LOG=$(ROOT)/log
 POOL=$(ROOT)/data_pool
 COMM=$(ROOT)/comm
 LIB=$(ROOT)/lib
+WINDOW=$(ROOT)/window
+
 SERVER_BIN=chat_system
 CLIENT_BIN=chat_client
 
 
-INCLUDE=-I$(POOL) -I$(LOG) -I$(COMM) -I$(LIB)/include
-LDFLAGS=-lpthread -ljson
+INCLUDE=-I$(POOL) -I$(LOG) -I$(COMM) -I$(LIB)/include -I$(WINDOW)
+LDFLAGS=-lpthread -ljson -lncurses
 
 SERVER_OBJ=$(shell ls $(SERVER) | grep -E '\.cpp$$' | sed 's/\.cpp/\.o/')
 SERVER_OBJ+=$(shell ls $(LOG) | grep -E '\.cpp$$' | sed 's/\.cpp/\.o/')
@@ -18,6 +20,7 @@ SERVER_OBJ+=$(shell ls $(POOL) | grep -E '\.cpp$$' | sed 's/\.cpp/\.o/')
 CLIENT_OBJ=$(shell ls $(CLIENT) | grep -E '\.cpp$$' | sed 's/\.cpp/\.o/g')
 CLIENT_OBJ+=$(shell ls $(LOG) | grep -E '\.cpp$$' | sed 's/\.cpp/\.o/')
 CLIENT_OBJ+=$(shell ls $(COMM) | grep -E '\.cpp$$' | sed 's/\.cpp/\.o/')
+CLIENT_OBJ+=$(shell ls $(WINDOW) | grep -E '\.cpp$$' | sed 's/\.cpp/\.o/')
 
 CC=g++
 
@@ -38,6 +41,8 @@ $(CLIENT_BIN):$(CLIENT_OBJ)
 %.o:$(LOG)/%.cpp
 	$(CC) -c $<
 %.o:$(COMM)/%.cpp
+	$(CC) -c $< $(INCLUDE)
+%.o:$(WINDOW)/%.cpp
 	$(CC) -c $< $(INCLUDE)
 
 .PHONY:debug
