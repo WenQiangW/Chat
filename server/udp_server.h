@@ -14,7 +14,7 @@
 #include <fcntl.h>
 #include "log.h"
 #include "pool.h"
-
+#include "data.h"
 class udp_server
 {
 public:
@@ -24,6 +24,7 @@ public:
 	int send_msg(const std::string& in,struct sockaddr_in& peer,\
 			const socklen_t& len);
 	int add_online_user(struct sockaddr_in *client);
+	int del_online_user(struct sockaddr_in *client);
 	int brocast_msg();
 	~udp_server();
 private:

@@ -29,6 +29,13 @@ int udp_server::add_online_user(struct sockaddr_in *client)
 {
 	online_user.insert(std::pair<int,struct sockaddr_in>(client->sin_addr.s_addr,*client));
 }
+//删除用户
+int udp_server::del_online_user(struct sockaddr_in *client)
+{	
+	std::map<int,struct sockaddr_in>::iterator iter = online_user.find(client->sin_addr.s_addr);
+	if(iter != online_user.end())
+		online_user.erase(iter);
+}
 
 //从客户端读取数据，然后写到data_pool里面
 //out指从客户端输出的数据
@@ -44,8 +51,17 @@ int udp_server::recv_msg(std::string& out)
 	{
 		buf[ret] = 0;
 		out = buf;
-		add_online_user(&peer);	
-		data_pool.put_data(out);
+		data_pool.put_data(out);		
+		data d;
+		d.string_to_data(out);
+		if(d.cmd == "QUIT")
+		{
+			del_online_user(&peer);
+		}
+		else
+		{
+			add_online_user(&peer);	
+		}
 		return 0;
 	}
 	return -1;
