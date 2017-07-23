@@ -14,11 +14,6 @@ int udp_client::init_client()
 	}
 
 }
-//添加用户，
-//int udp_client::add_online_user(struct sockaddr_in *client)
-//{
-//	online_user.insert(std::pair<int,struct sockaddr_in>(client->sin_addr.s_addr,*client));
-//}
 
 //从server端接受数据
 int udp_client::recv_msg( std::string& out)
