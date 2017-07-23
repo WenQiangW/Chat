@@ -14,7 +14,7 @@ void data::data_to_string(std::string& out)
 	serialize(val,out);
 
 }
-//将序列化in 转化为string
+//反序列化 将序列化in 转化为string
 void data::string_to_data(std::string& in)
 {
 	Json::Value val;
