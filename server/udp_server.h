@@ -23,16 +23,21 @@ public:
 	int recv_msg(std::string& out);
 	int send_msg(const std::string& in,struct sockaddr_in& peer,\
 			const socklen_t& len);
+	//广播消息
+	int brocast_msg();
+	//添加用户，删除用户
 	int add_online_user(struct sockaddr_in *client);
 	int del_online_user(struct sockaddr_in *client);
-	int brocast_msg();
 	~udp_server();
 private:
 	udp_server(const udp_server&);
+
 private:
+
 	std::string ip;
 	int port;
 	int sock;
+	//用户数据表
 	std::map<int,struct sockaddr_in> online_user;
 	pool data_pool;//数据池是一个vector<string>
 };
