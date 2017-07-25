@@ -19,6 +19,7 @@ void usage(const char* arg)
 {
 	std::cout<<"Usage: "<<arg<<"[client_ip] [client_port]" <<std::endl;
 }
+//2号信号注册函数
 void quit(int n)
 {
 	std::string out;
